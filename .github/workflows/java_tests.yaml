@@ -11,11 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Read deployment file
+        id: deployment_file
         run: |
-          echo 'DEPLOY_CONFIG_JSON<<EOF' >> $GITHUB_ENV
-          cat ./deploy_config.json >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          echo 'DEPLOY_CONFIG_JSON<<EOF' >> GITHUB_OUTPUT
+          cat ./deploy_config.json >> GITHUB_OUTPUT
+          echo 'EOF' >> GITHUB_OUTPUT
       - name: Run tests with supplied configuration
         run: |
-          echo 'Running ${{ fromJson(env.DEPLOY_CONFIG_JSON).tests.java.name }}'
-          ./gradlew ${{ fromJson(env.DEPLOY_CONFIG_JSON).tests.java.task }}
+          echo 'Running ${{ fromJson(steps.deployment_file.outputs.DEPLOY_CONFIG_JSON).tests.java.name }}'
+          ./gradlew ${{ fromJson(steps.deployment_file.outputs.DEPLOY_CONFIG_JSON).tests.java.task }}
