@@ -1,0 +1,21 @@
+---
+on:
+  issue_comment:
+    types: [created, edited, deleted]
+
+jobs:
+  java_tests:
+    runs-on: ubuntu-latest
+    if: contains(github.event.comment.body, '/unit-tests')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Read deployment file
+        run: |
+          echo 'DEPLOY_CONFIG_JSON<<EOF' >> $GITHUB_ENV
+          cat ./deploy_config.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: Run tests with supplied configuration
+        run: |
+          echo 'Running ${{ fromJson(env.DEPLOY_CONFIG_JSON).tests.java.name }}'
+          ./gradlew ${{ fromJson(env.DEPLOY_CONFIG_JSON).tests.java.task }}

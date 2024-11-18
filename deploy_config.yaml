@@ -1,0 +1,11 @@
+application:
+  name: "spring-boot-sample-app"
+tests:
+  java:
+    - name: "unit-test"
+      task: "test"
+      properties:
+      - "Dbuild.revision=${GIT_COMMIT}"
+      - "Dbuild.branch=${GIT_BRANCH}"
+packaging:
+  docker:
