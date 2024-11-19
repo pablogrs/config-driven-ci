@@ -12,17 +12,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
       - name: Get an entry with a variable that might contain dots or spaces
-        id: test_name
+        id: task_name
         uses: mikefarah/yq@master
         with:
-          cmd: yq '.tests.java.name' deploy_config.yaml
+          cmd: yq '.tests.java[0].task' deploy_config.yaml
       - name: Run tests with supplied configuration
         run: |
-          echo 'Running ${{ steps.test_name.outputs.result }}'
-
-# && \
-# ./gradlew ${{ steps.deployment_file.outputs.result.tests.java.task }}
+          echo './gradlew ${{ steps.task_name.outputs.result }}'
