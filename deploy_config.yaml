@@ -9,3 +9,6 @@ tests:
       - "Dbuild.branch=${GIT_BRANCH}"
 packaging:
   docker:
+    name: "spring-boot-sample-app"
+    dockerfile: "Dockerfile"
+    registry: "docker.io"
