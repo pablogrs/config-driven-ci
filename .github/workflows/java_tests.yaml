@@ -23,6 +23,6 @@ jobs:
       - name: Run tests with supplied configuration
         run: |
           echo 'Running ${{ steps.deployment_file.outputs.result.tests.java.name }}'
-
 # && \
 # ./gradlew ${{ steps.deployment_file.outputs.result.tests.java.task }}
+
