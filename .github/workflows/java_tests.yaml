@@ -25,4 +25,3 @@ jobs:
           echo 'Running ${{ steps.deployment_file.outputs.result.tests.java.name }}'
 # && \
 # ./gradlew ${{ steps.deployment_file.outputs.result.tests.java.task }}
-
