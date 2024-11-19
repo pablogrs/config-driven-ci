@@ -16,13 +16,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Get an entry with a variable that might contain dots or spaces
-        id: deployment_file
+        id: test_name
         uses: mikefarah/yq@master
         with:
-          cmd: yq deploy_config.yaml
+          cmd: yq '.tests.java.name' deploy_config.yaml
       - name: Run tests with supplied configuration
         run: |
-          echo 'Running ${{ steps.deployment_file.outputs.result.tests.java.name }}'
+          echo 'Running ${{ steps.test_name.outputs.result }}'
 
 # && \
 # ./gradlew ${{ steps.deployment_file.outputs.result.tests.java.task }}
