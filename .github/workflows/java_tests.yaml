@@ -1,7 +1,5 @@
 ---
 on:
-  pull_request: ~
-  workflow_dispatch:
   issue_comment:
     types: [created, edited, deleted]
 
@@ -14,13 +12,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Get an entry with a variable that might contain dots or spaces
-        id: get_username
+        id: deployment_file
         uses: mikefarah/yq@master
         with:
           cmd: yq deploy_config.yaml
       - name: Run tests with supplied configuration
         run: |
-          echo 'Running ${{ fromJson(steps.deployment_file.outputs.result).tests.java.name }}'
-          ./gradlew ${{ fromJson(steps.deployment_file.outputs.result).tests.java.task }}
+          echo 'Running ${{ steps.deployment_file.outputs.result.tests.java.name }}'
+
+# && \
+# ./gradlew ${{ steps.deployment_file.outputs.result.tests.java.task }}
