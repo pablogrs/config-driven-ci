@@ -1,7 +1,11 @@
 ---
 on:
+  pull_request: ~
+  workflow_dispatch:
   issue_comment:
     types: [created, edited, deleted]
+
+permissions: read-all
 
 jobs:
   java_tests:
@@ -10,13 +14,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Read deployment file
-        id: deployment_file
-        run: |
-          echo 'DEPLOY_CONFIG_JSON<<EOF' >> GITHUB_OUTPUT
-          cat ./deploy_config.json >> GITHUB_OUTPUT
-          echo 'EOF' >> GITHUB_OUTPUT
+
+      - name: Get an entry with a variable that might contain dots or spaces
+        id: get_username
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq deploy_config.yaml
       - name: Run tests with supplied configuration
         run: |
-          echo 'Running ${{ fromJson(steps.deployment_file.outputs.DEPLOY_CONFIG_JSON).tests.java.name }}'
-          ./gradlew ${{ fromJson(steps.deployment_file.outputs.DEPLOY_CONFIG_JSON).tests.java.task }}
+          echo 'Running ${{ fromJson(steps.deployment_file.outputs.result).tests.java.name }}'
+          ./gradlew ${{ fromJson(steps.deployment_file.outputs.result).tests.java.task }}
